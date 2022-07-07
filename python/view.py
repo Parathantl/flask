@@ -91,9 +91,7 @@ app.register_blueprint(mentor_routes)
 
 save_dir = "./saved_models"
 
-# document_store_1 = FAISSDocumentStore(faiss_index_factory_str="Flat", similarity="dot_product")
-
-doc_store = ElasticsearchDocumentStore(host="localhost", username="", password="", index="document")
+document_store_1 = FAISSDocumentStore(faiss_index_factory_str="Flat", similarity="dot_product")
 
 # Let's first get some files that we want to use
 docu_dir = "./api/routes/data/tutorial12"
@@ -104,11 +102,11 @@ fetch_archive_from_http(url=s3_url, output_dir=docu_dir)
 docs = convert_files_to_docs(dir_path=docu_dir, clean_func=clean_wiki_text, split_paragraphs=True)
 
 # Now, let's write the dicts containing documents to our DB.
-doc_store.write_documents(docs)
+document_store_1.write_documents(docs)
 
-reloaded_retriever = DensePassageRetriever.load(load_dir=save_dir, document_store=doc_store)
+reloaded_retriever = DensePassageRetriever.load(load_dir=save_dir, document_store=document_store_1)
 
-doc_store.update_embeddings(reloaded_retriever)
+document_store_1.update_embeddings(reloaded_retriever)
 
 # Reader/Generator
 generator = Seq2SeqGenerator(model_name_or_path="vblagoje/bart_lfqa")
