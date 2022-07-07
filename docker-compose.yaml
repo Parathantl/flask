@@ -1,13 +1,5 @@
 version: "3.3"
 services:
-  flask-python:
-    build:
-      context: ./python
-    container_name: python-flask
-    image: python-flask
-    ports:
-      - '80:3001'
-
   elasticsearch:
     build:
       context: ./elasticsearch
@@ -16,3 +8,13 @@ services:
     ports:
       - '9200:9200'
       - '9300:9300'
+
+  flask-python:
+    build:
+      context: ./python
+    container_name: python-flask
+    image: python-flask
+    ports:
+      - '80:3001'
+    depends_on:
+      - elasticsearch
