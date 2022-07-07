@@ -1,6 +1,6 @@
 from flask import Blueprint, current_app, request, jsonify
 from flask_jwt import current_identity
-
+import os
 from haystack.nodes import DensePassageRetriever
 from haystack.utils import fetch_archive_from_http
 from haystack.document_stores import InMemoryDocumentStore
@@ -11,6 +11,12 @@ from haystack.document_stores import FAISSDocumentStore
 from haystack.pipelines import GenerativeQAPipeline
 
 query_routes = Blueprint("query", __name__, url_prefix="/api/query")
+
+if os.path.exists("./api/routes/*.db"):
+    print("The file has been deleted successfully")
+    os.remove("./api/routes/*.db")
+else:
+    print("The file does not exist!")
 
 save_dir = "./saved_models"
 
