@@ -1,7 +1,7 @@
 # start by pulling the python image
-FROM python:3.8-alpine
+FROM python:3.8-slim-buster
 
-RUN apk update && apk add gcc libc-dev make git libffi-dev openssl-dev python3-dev libxml2-dev libxslt-dev 
+# RUN apk update && apk add gcc libc-dev make git libffi-dev openssl-dev python3-dev libxml2-dev libxslt-dev 
 
 # copy the requirements file into the image
 COPY ./requirements.txt /app/requirements.txt
