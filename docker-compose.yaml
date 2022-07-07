@@ -2,7 +2,7 @@ version: "3.3"
 services:
   flask-python:
     build:
-      dockerfile: ./python/Dockerfile
+      context: ./python
     container_name: python-flask
     image: python-flask
     ports:
@@ -10,7 +10,7 @@ services:
 
   elasticsearch:
     build:
-      dockerfile: ./elasticsearch/Dockerfile
+      context: ./elasticsearch
     container_name: elasticsearch    
     image: elasticsearch-backend
     ports:
