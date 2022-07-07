@@ -27,7 +27,7 @@ save_dir = "./saved_models"
 doc_store = ElasticsearchDocumentStore(
     host='localhost',
     username='',
-    password=''
+    password='',
     index='aurelius'
 )
 
