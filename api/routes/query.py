@@ -12,11 +12,13 @@ from haystack.pipelines import GenerativeQAPipeline
 
 query_routes = Blueprint("query", __name__, url_prefix="/api/query")
 
-if os.path.exists("./api/routes/*.db"):
-    print("The file has been deleted successfully")
-    os.remove("./api/routes/*.db")
-else:
-    print("The file does not exist!")
+for root, dirs, files in os.walk("/app"):
+    level = root.replace('/app', '').count(os.sep)
+    indent = ' ' * 4 * (level)
+    print('{}{}/'.format(indent, os.path.basename(root)))
+    subindent = ' ' * 4 * (level + 1)
+    for f in files:
+        print('{}{}'.format(subindent, f))
 
 save_dir = "./saved_models"
 
