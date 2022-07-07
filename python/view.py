@@ -91,22 +91,25 @@ app.register_blueprint(mentor_routes)
 
 save_dir = "./saved_models"
 
-document_store_1 = FAISSDocumentStore(sql_url="sqlite:///faiss_document_store.db", embedding_dim=128, faiss_index_factory_str="Flat", similarity="dot_product")
+document_store = FAISSDocumentStore(sql_url="sqlite:////home/ubuntu/flask/python/faiss_document_store.db", faiss_index_factory_str="Flat")
+
 
 # Let's first get some files that we want to use
 docu_dir = "./api/routes/data/tutorial12"
-s3_url = "https://bitbucket.org/parathant/rp-project/raw/bc3925e7dc8d5e5925b9be2668ba0438506e3a95/dataset.zip"
+s3_url = "https://bitbucket.org/parathant/rp-project/raw/ae286dd95c031cc4cdae3c20bc1ef8762f2b791a/dataset.zip"
 fetch_archive_from_http(url=s3_url, output_dir=docu_dir)
 
 # Convert files to dicts
 docs = convert_files_to_docs(dir_path=docu_dir, clean_func=clean_wiki_text, split_paragraphs=True)
 
 # Now, let's write the dicts containing documents to our DB.
-document_store_1.write_documents(docs)
+document_store.write_documents(docs)
 
-reloaded_retriever = DensePassageRetriever.load(load_dir=save_dir, document_store=document_store_1)
+reloaded_retriever = DensePassageRetriever.load(load_dir=save_dir, document_store=document_store)
 
-document_store_1.update_embeddings(reloaded_retriever)
+document_store.update_embeddings(reloaded_retriever)
+
+document_store.save("my_faiss")
 
 # Reader/Generator
 generator = Seq2SeqGenerator(model_name_or_path="vblagoje/bart_lfqa")
