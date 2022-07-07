@@ -15,8 +15,9 @@ query_routes = Blueprint("query", __name__, url_prefix="/api/query")
 save_dir = "./saved_models"
 
 # document_store_1 = FAISSDocumentStore(faiss_index_factory_str="Flat", similarity="dot_product")
-
+print("above store..")
 doc_store = ElasticsearchDocumentStore(host="localhost", username="", password="", index="document")
+print("after store....")
 
 # Let's first get some files that we want to use
 docu_dir = "./api/routes/data/tutorial12"
