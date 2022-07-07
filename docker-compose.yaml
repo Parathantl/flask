@@ -4,13 +4,15 @@ services:
     build:
       dockerfile: ./python/Dockerfile
     container_name: python-flask
+    image: python-flask
     ports:
       - '80:3001'
 
   elasticsearch:
     build:
       dockerfile: ./elasticsearch/Dockerfile
-    container_name: elasticsearch
+    container_name: elasticsearch    
+    image: elasticsearch-backend
     ports:
       - '9200:9200'
       - '9300:9300'
