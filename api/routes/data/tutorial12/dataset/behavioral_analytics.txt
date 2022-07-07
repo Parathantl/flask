@@ -1,0 +1,44 @@
+You’re shopping for a car. You visit a manufacturer’s website to learn about model trims, review deals listed on the local dealer’s website, and then visit the dealership. What information can the sales rep review to learn about your purchasing needs and determine the best options to offer you?
+
+The security operations center receives an alert about an employee’s activities on the network. Is the employee learning about different business areas and just working at unexpected hours from a remote location? Or is this malicious behavior and the SOC should take action?
+
+These are examples of insights that user behavior analytics can provide. Common use cases include increasing business-to-business and business-to-consumer sales, improving customer experience, detecting anomalies, alerting on risks, and leveraging data from Internet of Things devices to identify dangerous conditions.
+
+Rosaria Silipo, principal data scientist and head of evangelism at KNIME, offers this simple definition of behavioral analytics. She says, “Behavioral analytics studies people’s reactions and behavior patterns in particular situations.”
+Business opportunities in behavioral analytics
+
+Behavioral analytics is particularly important any time a product or service has many people doing numerous things where there are both opportunities to improve outcomes and to reduce risks. Examples include customer buying habits on large-scale e-commerce websites, healthcare applications, gaming platforms, and wealth management in banking. Silipo explains further, “The goal is to study the mass of people, and the key is the availability of large amounts of data.“
+
+Kathy Brunner, CEO of Acumen Analytics, refers to research that the global behavior analytics market is projected to reach $2.2 billion by 2026, from $427.3 million, at a compound annual growth rate of 32% from 2022 to 2026.
+
+Brunner shares these insights on the business opportunities. “The current focus is mainly retail, and why not? Where I see real transformation is in combining this capability with AI/ML, other advanced modeling technologies, and real-world evidence in healthcare data. Imagine the impact from figuring out how best to get patients into clinical trials, improving drug discovery, and advancing patient outcomes with precision and personalized medicine.”
+
+So although behavioral analytics can be an issue if an implementation violates privacy norms or compliance regulations, it can also lead to very positive outcomes for consumers and businesses.
+Mitigating risks with behavioral analytics
+
+Behavioral analytics is often used for business opportunities, but the techniques are just as applicable to identify and alert on risks. Behavioral analytics is used in banking for fraud detection, embedded in AIops tools to help improve incident management, and helps gaming systems to identify cheaters.
+
+Large enterprises with many global employees, contractors, and suppliers also leverage behavioral analytics to spot suspicious activities. Isaac Kohen, vice president of research and development at Teramind, says, “User and entity behavior analytics can identify and alert the organization to a wide range of anomalous behaviors. Potential threats can be malicious, inadvertent, or compromised activities by an employee, user, or third-party entity. It is used in many industries to prevent insider threats and analyze user behaviors for compliance and regulatory requirements.”
+
+The data science behind behavioral analytics is often applied to people, customers, and users, but it can also be applied to the entities operating in large-scale systems.
+
+Todd Mostak, CTO and cofounder of Heavy.AI, shares this wider perspective: “Behavioral analytics is a data-driven approach to tracking, predicting, and leveraging behavior data to make informed decisions. With the shipping delays and supply chain shortages today, behavioral analytics technology can monitor the activity of billions of ships, examine ports, and study global shipping patterns to help experts solve these issues.”
+The data science behind behavioral analytics
+
+Behavior analytics is a broad application of data science, machine learning, and AI techniques. Scott Toborg, head of data science and analytics products at Teradata, explains the underlying data science. “Behavioral analytics leverages customer data about who they are (demographics), what they are doing (events), and who they interact with (connections) to derive better insights, predictions, and actions. The process consists of segmentation, predictive modeling, and prescriptive action.”
+
+Toborg suggests that behavioral analytics shares many of the same opportunities data science targets but also faces challenges in developing and supporting machine learning models. He continues, “When properly implemented, behavioral analytics results in better customer experiences, more precise targeted marketing, and greater engagement. However, there are challenges, including privacy, model bias, and stereotyping.”
+Useful techniques and technologies
+
+Behavioral analytics is a set of operations, data, and technology practices targeted at specific business opportunities or aimed to mitigate a set of quantifiable risks. There are many ways organizations can implement behavior analytics. The list below is a subset of the available solutions.
+
+    Platforms such as content management, e-commerce, and digital experience often include capabilities to support behavioral analytics.
+    Customer data platforms centralize data on customers and their actions while providing integrations to perform actions on marketing automation platforms, advertising systems, e-commerce, and other platforms.
+    Product analytics and digital experience analytics platforms such as Adobe Analytics, Amplitude, Contentsquare, FullStory, Glassbox, Heap, Mixpanel, and Userpilot aggregate usage metrics and provide analytics capabilities.
+    Media, e-commerce, and other content-rich websites should consider intelligent search platforms that include behavioral analytics, recommendation engines, and personalization capabilities.
+    Techniques to experiment and learn from user responses include A/B testing, user activity recordings, activity measurement tools, and customer feedback measurement practices. These aim to optimize activities based on customer segments and personas.
+    Application developers can use feature flagging to support large-scale A/B feature testing while implementing microservice observability to identify malicious API activities.
+    Organizations can also consider data analytics, analytics process automation, or machine learning platforms to centralize behavioral data and create behavioral analytics capabilities. Some data platforms include Alteryx, Dataiku, Databricks, DataRobot, Informatica, KNIME, RapidMiner, SAS, Tableau, Talend, and many others.
+    IoT, wearable, augmented reality/virtual reality, voice-enabled devices, and cameras with computer vision capabilities all represent new inputs and data sources for capturing behavioral data.
+
+There’s little doubt that more organizations will consider using behavioral analytics capabilities to grow revenue, improve experiences, and reduce risks.
