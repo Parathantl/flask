@@ -9,3 +9,6 @@ sudo snap install docker
 docker --version
 
 sudo docker ps
+
+sudo docker image build -t flask_docker .
+
