@@ -1,11 +1,5 @@
 from haystack.nodes import DensePassageRetriever
-from haystack.utils import fetch_archive_from_http
 from haystack.document_stores import InMemoryDocumentStore
-from haystack.utils import convert_files_to_docs, fetch_archive_from_http, clean_wiki_text
-from haystack.nodes import Seq2SeqGenerator
-
-from haystack.document_stores import FAISSDocumentStore
-from haystack.pipelines import GenerativeQAPipeline
 
 doc_dir = "/home/ubuntu/flask/content"
 train_filename = "answersDPR.json"
