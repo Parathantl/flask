@@ -11,17 +11,7 @@ from haystack.pipelines import GenerativeQAPipeline
 from haystack.document_stores import ElasticsearchDocumentStore
 import shutil
 
-from haystack.utils import launch_es
-
-launch_es()
-
 query_routes = Blueprint("query", __name__, url_prefix="/api/query")
-
-if os.path.exists("./api/routes/data/"):
-    print("The file has been deleted successfully")
-    shutil.rmtree("./api/routes/data/", ignore_errors=False, onerror=None)
-else:
-    print("The file does not exist!")
 
 save_dir = "./saved_models"
 
