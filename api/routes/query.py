@@ -9,8 +9,15 @@ from haystack.nodes import Seq2SeqGenerator
 
 from haystack.document_stores import FAISSDocumentStore
 from haystack.pipelines import GenerativeQAPipeline
+import shutil
 
 query_routes = Blueprint("query", __name__, url_prefix="/api/query")
+
+if os.path.exists("./api/routes/data/"):
+    print("The file has been deleted successfully")
+    shutil.rmtree("./api/routes/data/", ignore_errors=False, onerror=None)
+else:
+    print("The file does not exist!")
 
 save_dir = "./saved_models"
 
