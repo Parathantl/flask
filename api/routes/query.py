@@ -24,12 +24,7 @@ save_dir = "./saved_models"
 
 # document_store_1 = FAISSDocumentStore(faiss_index_factory_str="Flat", similarity="dot_product")
 
-doc_store = ElasticsearchDocumentStore(
-    host='localhost',
-    username='',
-    password='',
-    index='aurelius'
-)
+doc_store = ElasticsearchDocumentStore(host="localhost", username="", password="", index="document")
 
 # Let's first get some files that we want to use
 docu_dir = "./api/routes/data/tutorial12"
