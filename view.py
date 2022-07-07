@@ -27,7 +27,7 @@ from api.routes.status import status_routes
 from api.routes.courses import course_routes
 from api.routes.mentors import mentor_routes
 from api.routes.companies import company_routes
-from api.routes.query import query_routes
+# from api.routes.query import query_routes
 
 from dotenv import load_dotenv
 
@@ -81,7 +81,7 @@ app.register_blueprint(status_routes)
 app.register_blueprint(course_routes)
 app.register_blueprint(company_routes)
 app.register_blueprint(mentor_routes)
-app.register_blueprint(query_routes)
+# app.register_blueprint(query_routes)
 
 @app.route('/')
 def home():
