@@ -12,14 +12,6 @@ from haystack.pipelines import GenerativeQAPipeline
 
 query_routes = Blueprint("query", __name__, url_prefix="/api/query")
 
-for root, dirs, files in os.walk("/app"):
-    level = root.replace('/app', '').count(os.sep)
-    indent = ' ' * 4 * (level)
-    print('{}{}/'.format(indent, os.path.basename(root)))
-    subindent = ' ' * 4 * (level + 1)
-    for f in files:
-        print('{}{}'.format(subindent, f))
-
 save_dir = "./saved_models"
 
 document_store_1 = FAISSDocumentStore(faiss_index_factory_str="Flat")
