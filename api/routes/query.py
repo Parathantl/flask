@@ -21,7 +21,7 @@ else:
 
 save_dir = "./saved_models"
 
-document_store_1 = FAISSDocumentStore(sql_url="sqlite:///faiss_document_store.db" , faiss_index_factory_str="Flat", similarity="dot_product")
+document_store_1 = FAISSDocumentStore(sql_url="./api/routes/faiss_document_store.db" , faiss_index_factory_str="Flat", similarity="dot_product")
 
 # Let's first get some files that we want to use
 docu_dir = "./api/routes/data/tutorial12"
