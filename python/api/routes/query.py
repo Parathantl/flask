@@ -9,11 +9,8 @@ from haystack.nodes import Seq2SeqGenerator
 from haystack.document_stores import FAISSDocumentStore
 from haystack.pipelines import GenerativeQAPipeline
 from haystack.document_stores import ElasticsearchDocumentStore
-import time
 
 query_routes = Blueprint("query", __name__, url_prefix="/api/query")
-
-time.sleep(200)
 
 save_dir = "./saved_models"
 
