@@ -10,11 +10,31 @@ from haystack.document_stores import FAISSDocumentStore
 from haystack.pipelines import GenerativeQAPipeline
 from haystack.document_stores import ElasticsearchDocumentStore
 
+from elasticsearch import Elasticsearch, RequestsHttpConnection
+import time
+import datetime
+timenow = datetime.datetime.now()
+
 query_routes = Blueprint("query", __name__, url_prefix="/api/query")
 
 save_dir = "./saved_models"
 
 # document_store_1 = FAISSDocumentStore(faiss_index_factory_str="Flat", similarity="dot_product")
+
+es = Elasticsearch(['localhost:9200'],http_auth=('',''))
+
+for x in range(0,5):
+   es.index(index='test', doc_type='json', id=x, body={
+   'data1':"Hello World",
+   'value':325,
+   'time':timenow,
+   'timeout':30, # The Time Of timeout you want
+
+    })
+
+print("Data sent {} ".format(x))
+time.sleep(60)
+
 print("above store..")
 doc_store = ElasticsearchDocumentStore(host="localhost", username="", password="", index="document")
 print("after store....")
