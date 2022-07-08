@@ -18,9 +18,9 @@ from api.routes.mentors import mentor_routes
 from api.routes.companies import company_routes
 
 from haystack.nodes import DensePassageRetriever
-from haystack.document_stores import FAISSDocumentStore
 from haystack.pipelines import GenerativeQAPipeline
-from haystack.nodes import Seq2SeqGenerator
+from haystack.nodes import FARMReader, TransformersReader, Seq2SeqGenerator
+from haystack.document_stores import ElasticsearchDocumentStore, FAISSDocumentStore
 
 app = Flask(__name__)
 CORS(app)
@@ -75,13 +75,15 @@ app.register_blueprint(mentor_routes)
 
 save_dir = "./saved_models"
 
-document_store = FAISSDocumentStore.load(index_path="haystack_test_faiss", config_path="haystack_test_faiss_config")
+# document_store = FAISSDocumentStore.load(index_path="haystack_test_faiss", config_path="haystack_test_faiss_config")
+
+document_store = ElasticsearchDocumentStore(host="localhost", username="", password="", index="document")
 
 retriever = DensePassageRetriever.load(load_dir=save_dir, document_store=document_store)
 
-generator = Seq2SeqGenerator(model_name_or_path="vblagoje/bart_lfqa")
+reader = FARMReader(model_name_or_path="deepset/roberta-base-squad2", use_gpu=True)
 
-pipe = GenerativeQAPipeline(generator, retriever)
+pipe = GenerativeQAPipeline(reader, retriever)
 
 @app.route('/')
 def home():
@@ -97,7 +99,7 @@ def getQuery():
 
    print("query:", query)
 
-   prediction = pipe.run(query=query, params={"Retriever": {"top_k": 10}})
+   prediction = pipe.run(query=query, params={"Retriever": {"top_k": 10}, "Reader": {"top_k": 5}})
    
    print("prediction:", prediction)
    

@@ -1,9 +1,12 @@
 from pydoc import doc
 from haystack.document_stores import FAISSDocumentStore
+from haystack.document_stores import ElasticsearchDocumentStore
 from haystack.utils import convert_files_to_docs, fetch_archive_from_http, clean_wiki_text, print_answers
 from haystack.nodes import DensePassageRetriever
 
-document_store = FAISSDocumentStore(faiss_index_factory_str="Flat")
+# document_store = FAISSDocumentStore(faiss_index_factory_str="Flat")
+
+document_store = ElasticsearchDocumentStore(host="localhost", username="", password="", index="document")
 
 # Let's first get some files that we want to use
 docu_dir = "./api/routes/data/tutorial12"
@@ -23,4 +26,5 @@ document_store.write_documents(docs)
 
 document_store.update_embeddings(retriever)
 
-document_store.save(index_path="haystack_test_faiss", config_path="haystack_test_faiss_config")
+# For FAISS only
+# document_store.save(index_path="haystack_test_faiss", config_path="haystack_test_faiss_config")
