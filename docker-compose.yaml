@@ -5,8 +5,6 @@ services:
       context: ./python
     container_name: flask-python
     image: flask-python
-    ports:
-      - '8080:5000'
 
   etcd:
     container_name: milvus-etcd
@@ -48,13 +46,6 @@ services:
     depends_on:
       - "etcd"
       - "minio"
-
-  proxy-app:
-    container_name: proxy-app
-    build:
-      context: ./proxy
-      dockerfile: qa.Dockerfile
-    image: proxy-app
 
 networks:
   default:
