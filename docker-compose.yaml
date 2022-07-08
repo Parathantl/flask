@@ -5,6 +5,9 @@ services:
       context: ./python
     container_name: flask-python
     image: flask-python
+    ports:
+      - '80:5000'
+    network_mode: "host"
 
   etcd:
     container_name: milvus-etcd
