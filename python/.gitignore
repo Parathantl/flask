@@ -1,2 +1,5 @@
 saved_models/
 api/routes/data
+faiss_document_store.db
+haystack_test_faiss
+haystack_test_faiss_config

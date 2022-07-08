@@ -75,11 +75,9 @@ app.register_blueprint(mentor_routes)
 
 save_dir = "./saved_models"
 
-document_store = FAISSDocumentStore(sql_url="sqlite:////app/faiss_document_store.db", faiss_index_factory_str="Flat")
+document_store = FAISSDocumentStore.load(index_path="haystack_test_faiss", config_path="haystack_test_faiss_config")
 
 retriever = DensePassageRetriever.load(load_dir=save_dir, document_store=document_store)
-
-document_store.update_embeddings(retriever)
 
 generator = Seq2SeqGenerator(model_name_or_path="vblagoje/bart_lfqa")
 
