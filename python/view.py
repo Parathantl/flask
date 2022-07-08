@@ -91,7 +91,7 @@ app.register_blueprint(mentor_routes)
 
 save_dir = "./saved_models"
 
-document_store = FAISSDocumentStore(sql_url="sqlite:////home/ubuntu/flask/python/faiss_document_store.db", faiss_index_factory_str="Flat", return_embedding='true')
+document_store = FAISSDocumentStore(sql_url="sqlite:////home/ubuntu/flask/python/faiss_document_store.db", index = "qna")
 
 # Let's first get some files that we want to use
 docu_dir = "./api/routes/data/tutorial12"
@@ -101,13 +101,14 @@ fetch_archive_from_http(url=s3_url, output_dir=docu_dir)
 # Convert files to dicts
 docs = convert_files_to_docs(dir_path=docu_dir, clean_func=clean_wiki_text, split_paragraphs=True)
 
+document_store.delete_documents()
+
 # Now, let's write the dicts containing documents to our DB.
 document_store.write_documents(docs)
 
 reloaded_retriever = DensePassageRetriever.load(load_dir=save_dir, document_store=document_store)
 
 document_store.update_embeddings(reloaded_retriever)
-
 
 # Reader/Generator
 generator = Seq2SeqGenerator(model_name_or_path="vblagoje/bart_lfqa")
