@@ -110,9 +110,11 @@ def getQuery():
 
    query = form_data['query']
 
-   pipe.run(query=query, params={"Retriever": {"top_k": 5}})
-
-   return 0
+   result = pipe.run(query=query, params={"Retriever": {"top_k": 5}})
+   
+   print(result)
+   
+   return result
 
 if __name__=="__main__":
     app.run(host='0.0.0.0', port=80)
