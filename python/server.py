@@ -92,7 +92,13 @@ docs = convert_files_to_docs(dir_path=docu_dir, clean_func=clean_wiki_text, spli
 # Now, let's write the dicts containing documents to our DB.
 document_store.write_documents(docs)
 
-reloaded_retriever = DensePassageRetriever.load(load_dir=save_dir, document_store=document_store)
+# reloaded_retriever = DensePassageRetriever.load(load_dir=save_dir, document_store=document_store)
+
+reloaded_retriever = DensePassageRetriever(
+    document_store=document_store,
+    query_embedding_model="vblagoje/dpr-question_encoder-single-lfqa-wiki",
+    passage_embedding_model="vblagoje/dpr-ctx_encoder-single-lfqa-wiki",
+)
 
 document_store.update_embeddings(reloaded_retriever)
 
