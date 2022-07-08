@@ -1,5 +1,2 @@
 saved_models/
 api/routes/data
-faiss_document_store.db
-my_faiss
-my_faiss.json

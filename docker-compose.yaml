@@ -6,7 +6,7 @@ services:
     container_name: python-flask
     image: python-flask
     ports:
-      - '80:3001'
+      - '80:5000'
 
   etcd:
     container_name: milvus-etcd

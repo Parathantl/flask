@@ -1,20 +1,10 @@
-from flask import Flask, render_template, request
-import os
-
-from datetime import timedelta
-
 from flask import Flask
-from flask.helpers import send_from_directory
 from flask_cors import CORS
-
-from flask_jwt import JWT
-
-from api.exceptions.notfound import NotFoundException
-
-from api.exceptions.badrequest import BadRequestException
-from api.exceptions.validation import ValidationException
-
+from dotenv import load_dotenv
 from api.neo4j import init_driver
+import os
+from datetime import timedelta
+from flask_jwt import JWT
 
 from api.routes.auth import auth_routes
 from api.routes.account import account_routes
@@ -35,12 +25,10 @@ from haystack.nodes import Seq2SeqGenerator
 from haystack.pipelines import GenerativeQAPipeline
 from haystack.document_stores import MilvusDocumentStore
 
-from dotenv import load_dotenv
-
-load_dotenv()
-
 app = Flask(__name__)
 CORS(app)
+
+load_dotenv()
 
 app.config.from_mapping(
     NEO4J_URI=os.getenv('NEO4J_URI'),
@@ -126,6 +114,6 @@ def getQuery():
 
     return 0
 
-if __name__ == "__main__":
-    port = int(os.environ.get('PORT', 3001))
-    app.run(debug=True, host='0.0.0.0', port=port)
+if __name__=="__main__":
+    app.debug = True
+    app.run(host='0.0.0.0')
