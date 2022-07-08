@@ -18,7 +18,7 @@ from api.routes.mentors import mentor_routes
 from api.routes.companies import company_routes
 
 from haystack.nodes import DensePassageRetriever
-from haystack.pipelines import GenerativeQAPipeline
+from haystack.pipelines import GenerativeQAPipeline, ExtractiveQAPipeline
 from haystack.nodes import FARMReader, TransformersReader, Seq2SeqGenerator
 from haystack.document_stores import ElasticsearchDocumentStore, FAISSDocumentStore
 
@@ -83,7 +83,7 @@ retriever = DensePassageRetriever.load(load_dir=save_dir, document_store=documen
 
 reader = FARMReader(model_name_or_path="deepset/roberta-base-squad2", use_gpu=True)
 
-pipe = GenerativeQAPipeline(reader, retriever)
+pipe = ExtractiveQAPipeline(reader, retriever)
 
 @app.route('/')
 def home():
