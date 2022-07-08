@@ -114,9 +114,7 @@ def getQuery():
 
    prediction = pipe.run(query=query, params={"Retriever": {"top_k": 10}, "Reader": {"top_k": 5}})
    
-   pprint(prediction)   
-
-   print_answers(prediction, details="minimum")
+   print("prediction:", prediction)
 
    return 0
 
