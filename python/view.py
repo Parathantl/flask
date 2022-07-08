@@ -91,7 +91,7 @@ app.register_blueprint(mentor_routes)
 
 save_dir = "./saved_models"
 
-document_store = FAISSDocumentStore(sql_url="sqlite:////home/ubuntu/flask/python/faiss_document_store.db", faiss_index_factory_str="Flat")
+document_store = FAISSDocumentStore(sql_url="sqlite:////home/ubuntu/flask/python/faiss_document_store.db", faiss_index_factory_str="Flat", return_embedding='true')
 
 # Let's first get some files that we want to use
 docu_dir = "./api/routes/data/tutorial12"
@@ -108,7 +108,6 @@ reloaded_retriever = DensePassageRetriever.load(load_dir=save_dir, document_stor
 
 document_store.update_embeddings(reloaded_retriever)
 
-document_store.save("my_faiss")
 
 # Reader/Generator
 generator = Seq2SeqGenerator(model_name_or_path="vblagoje/bart_lfqa")
