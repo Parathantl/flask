@@ -19,11 +19,12 @@ from api.routes.companies import company_routes
 
 from haystack.nodes import DensePassageRetriever
 from haystack.utils import fetch_archive_from_http
-from haystack.utils import convert_files_to_docs, fetch_archive_from_http, clean_wiki_text
-from haystack.nodes import Seq2SeqGenerator
+from haystack.utils import convert_files_to_docs, fetch_archive_from_http, clean_wiki_text, print_answers
 
-from haystack.pipelines import GenerativeQAPipeline
-from haystack.document_stores import MilvusDocumentStore
+from haystack.document_stores import ElasticsearchDocumentStore
+from haystack.pipelines import ExtractiveQAPipeline
+from haystack.nodes import FARMReader
+from pprint import pprint
 
 app = Flask(__name__)
 CORS(app)
@@ -78,7 +79,7 @@ app.register_blueprint(mentor_routes)
 
 save_dir = "./saved_models"
 
-document_store = MilvusDocumentStore()
+document_store = ElasticsearchDocumentStore(host="localhost", username="", password="", index="document")
 
 # Let's first get some files that we want to use
 docu_dir = "./api/routes/data/tutorial12"
@@ -93,12 +94,9 @@ document_store.write_documents(docs)
 
 reloaded_retriever = DensePassageRetriever.load(load_dir=save_dir, document_store=document_store)
 
-document_store.update_embeddings(reloaded_retriever)
+reader = FARMReader(model_name_or_path="deepset/roberta-base-squad2", use_gpu=True)
 
-# Reader/Generator
-generator = Seq2SeqGenerator(model_name_or_path="vblagoje/bart_lfqa")
-
-pipe = GenerativeQAPipeline(generator, reloaded_retriever)
+pipe = ExtractiveQAPipeline(reader, reloaded_retriever)
 
 @app.route('/')
 def home():
@@ -112,10 +110,12 @@ def getQuery():
 
    query = form_data['query']
 
-   result = pipe.run(query=query, params={"Retriever": {"top_k": 5}})
+   prediction = pipe.run(query=query, params={"Retriever": {"top_k": 10}, "Reader": {"top_k": 5}})
    
-   print(result)
-   
+   pprint(prediction)   
+
+   print_answers(prediction, details="minimum")
+
    return result
 
 if __name__=="__main__":
