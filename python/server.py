@@ -92,6 +92,8 @@ docs = convert_files_to_docs(dir_path=docu_dir, clean_func=clean_wiki_text, spli
 # Now, let's write the dicts containing documents to our DB.
 document_store.write_documents(docs)
 
+document_store.update_embeddings()
+
 reloaded_retriever = DensePassageRetriever.load(load_dir=save_dir, document_store=document_store)
 
 reader = FARMReader(model_name_or_path="deepset/roberta-base-squad2", use_gpu=True)
@@ -116,7 +118,7 @@ def getQuery():
 
    print_answers(prediction, details="minimum")
 
-   return result
+   return 0
 
 if __name__=="__main__":
     app.run(host='0.0.0.0', port=80)
