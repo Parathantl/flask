@@ -56,7 +56,6 @@ services:
       dockerfile: qa.Dockerfile
     image: proxy-app
     depends_on:
-      - flask-python
       - standalone
 
 networks:
