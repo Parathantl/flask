@@ -18,12 +18,9 @@ from api.routes.mentors import mentor_routes
 from api.routes.companies import company_routes
 
 from haystack.nodes import DensePassageRetriever
-
-from haystack.document_stores import ElasticsearchDocumentStore
-from haystack.pipelines import ExtractiveQAPipeline
-from haystack.nodes import FARMReader
-from pprint import pprint
-from haystack.utils import print_answers
+from haystack.document_stores import FAISSDocumentStore
+from haystack.pipelines import GenerativeQAPipeline
+from haystack.nodes import Seq2SeqGenerator
 
 app = Flask(__name__)
 CORS(app)
@@ -78,15 +75,15 @@ app.register_blueprint(mentor_routes)
 
 save_dir = "./saved_models"
 
-document_store = ElasticsearchDocumentStore(host="localhost", username="", password="", index="document")
+document_store = FAISSDocumentStore(sql_url="sqlite:////app/faiss_document_store.db", faiss_index_factory_str="Flat")
 
-reloaded_retriever = DensePassageRetriever.load(load_dir=save_dir, document_store=document_store)
+retriever = DensePassageRetriever.load(load_dir=save_dir, document_store=document_store)
 
-document_store.update_embeddings(reloaded_retriever)
+document_store.update_embeddings(retriever)
 
-reader = FARMReader(model_name_or_path="deepset/roberta-base-squad2", use_gpu=True)
+generator = Seq2SeqGenerator(model_name_or_path="vblagoje/bart_lfqa")
 
-pipe = ExtractiveQAPipeline(reader, reloaded_retriever)
+pipe = GenerativeQAPipeline(generator, retriever)
 
 @app.route('/')
 def home():
@@ -100,14 +97,12 @@ def getQuery():
 
    query = form_data['query']
 
-   prediction = pipe.run(query=query, params={"Retriever": {"top_k": 10}, "Reader": {"top_k": 5}})
+   print("query:", query)
+
+   prediction = pipe.run(query=query, params={"Retriever": {"top_k": 10}})
    
-   pprint(prediction)   
-
    print("prediction:", prediction)
-
-   print_answers(prediction, details="minimum")
-
+   
    return 0
 
 if __name__=="__main__":
