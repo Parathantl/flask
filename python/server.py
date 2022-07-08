@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 from flask_cors import CORS
 from dotenv import load_dotenv
 from api.neo4j import init_driver
@@ -104,8 +104,8 @@ app.register_blueprint(mentor_routes)
 def home():
     return {"hello": "world"}
 
-#@app.route('/api/query', methods=['POST'])
-#def getQuery():
+# @app.route('/api/query', methods=['POST'])
+# def getQuery():
 #    form_data = request.get_json()['results']
 
 #    query = form_data['query']
