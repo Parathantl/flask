@@ -100,8 +100,6 @@ reloaded_retriever = DensePassageRetriever(
     passage_embedding_model="vblagoje/dpr-ctx_encoder-single-lfqa-wiki",
 )
 
-document_store.update_embeddings(reloaded_retriever)
-
 reader = FARMReader(model_name_or_path="deepset/roberta-base-squad2", use_gpu=True)
 
 pipe = ExtractiveQAPipeline(reader, reloaded_retriever)
