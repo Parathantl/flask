@@ -18,13 +18,12 @@ from api.routes.mentors import mentor_routes
 from api.routes.companies import company_routes
 
 from haystack.nodes import DensePassageRetriever
-from haystack.utils import fetch_archive_from_http
-from haystack.utils import convert_files_to_docs, fetch_archive_from_http, clean_wiki_text, print_answers
 
 from haystack.document_stores import ElasticsearchDocumentStore
 from haystack.pipelines import ExtractiveQAPipeline
 from haystack.nodes import FARMReader
 from pprint import pprint
+from haystack.utils import print_answers
 
 app = Flask(__name__)
 CORS(app)
@@ -81,24 +80,9 @@ save_dir = "./saved_models"
 
 document_store = ElasticsearchDocumentStore(host="localhost", username="", password="", index="document")
 
-# Let's first get some files that we want to use
-docu_dir = "./api/routes/data/tutorial12"
-s3_url = "https://bitbucket.org/parathant/rp-project/raw/ae286dd95c031cc4cdae3c20bc1ef8762f2b791a/dataset.zip"
-fetch_archive_from_http(url=s3_url, output_dir=docu_dir)
+reloaded_retriever = DensePassageRetriever.load(load_dir=save_dir, document_store=document_store)
 
-# Convert files to dicts
-docs = convert_files_to_docs(dir_path=docu_dir, clean_func=clean_wiki_text, split_paragraphs=True)
-
-# Now, let's write the dicts containing documents to our DB.
-document_store.write_documents(docs)
-
-# reloaded_retriever = DensePassageRetriever.load(load_dir=save_dir, document_store=document_store)
-
-reloaded_retriever = DensePassageRetriever(
-    document_store=document_store,
-    query_embedding_model="vblagoje/dpr-question_encoder-single-lfqa-wiki",
-    passage_embedding_model="vblagoje/dpr-ctx_encoder-single-lfqa-wiki",
-)
+document_store.update_embeddings(reloaded_retriever)
 
 reader = FARMReader(model_name_or_path="deepset/roberta-base-squad2", use_gpu=True)
 
@@ -118,7 +102,11 @@ def getQuery():
 
    prediction = pipe.run(query=query, params={"Retriever": {"top_k": 10}, "Reader": {"top_k": 5}})
    
+   pprint(prediction)   
+
    print("prediction:", prediction)
+
+   print_answers(prediction, details="minimum")
 
    return 0
 
