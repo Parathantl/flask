@@ -76,43 +76,43 @@ app.register_blueprint(course_routes)
 app.register_blueprint(company_routes)
 app.register_blueprint(mentor_routes)
 
-#save_dir = "./saved_models"
+save_dir = "./saved_models"
 
-#document_store = MilvusDocumentStore()
+document_store = MilvusDocumentStore()
 
 # Let's first get some files that we want to use
-#docu_dir = "./api/routes/data/tutorial12"
-#s3_url = "https://bitbucket.org/parathant/rp-project/raw/ae286dd95c031cc4cdae3c20bc1ef8762f2b791a/dataset.zip"
-#fetch_archive_from_http(url=s3_url, output_dir=docu_dir)
+docu_dir = "./api/routes/data/tutorial12"
+s3_url = "https://bitbucket.org/parathant/rp-project/raw/ae286dd95c031cc4cdae3c20bc1ef8762f2b791a/dataset.zip"
+fetch_archive_from_http(url=s3_url, output_dir=docu_dir)
 
 # Convert files to dicts
-#docs = convert_files_to_docs(dir_path=docu_dir, clean_func=clean_wiki_text, split_paragraphs=True)
+docs = convert_files_to_docs(dir_path=docu_dir, clean_func=clean_wiki_text, split_paragraphs=True)
 
 # Now, let's write the dicts containing documents to our DB.
-#document_store.write_documents(docs)
+document_store.write_documents(docs)
 
-#reloaded_retriever = DensePassageRetriever.load(load_dir=save_dir, document_store=document_store)
+reloaded_retriever = DensePassageRetriever.load(load_dir=save_dir, document_store=document_store)
 
-#document_store.update_embeddings(reloaded_retriever)
+document_store.update_embeddings(reloaded_retriever)
 
 # Reader/Generator
-#generator = Seq2SeqGenerator(model_name_or_path="vblagoje/bart_lfqa")
+generator = Seq2SeqGenerator(model_name_or_path="vblagoje/bart_lfqa")
 
-#pipe = GenerativeQAPipeline(generator, reloaded_retriever)
+pipe = GenerativeQAPipeline(generator, reloaded_retriever)
 
 @app.route('/')
 def home():
     return {"hello": "world"}
 
-# @app.route('/api/query', methods=['POST'])
-# def getQuery():
-#    form_data = request.get_json()['results']
+@app.route('/api/query', methods=['POST'])
+def getQuery():
+   form_data = request.get_json()['results']
 
-#    query = form_data['query']
+   query = form_data['query']
 
-#    pipe.run(query=query, params={"Retriever": {"top_k": 5}})
+   pipe.run(query=query, params={"Retriever": {"top_k": 5}})
 
-#    return 0
+   return 0
 
 if __name__=="__main__":
     app.run(host='0.0.0.0', port=80)
