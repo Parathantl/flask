@@ -106,7 +106,9 @@ def home():
 
 @app.route('/api/query', methods=['POST'])
 def getQuery():
-   form_data = request.get_json()['results']
+   form_data = request.get_json()
+
+   print("form_data:", form_data)
 
    query = form_data['query']
 
