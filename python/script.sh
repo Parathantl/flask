@@ -12,4 +12,4 @@ sudo docker ps
 
 #sudo docker image build -t flask-python .
 
-#sudo  docker run -p 80:5000 --net=host flask-python
+#sudo  docker run -p 80:80 --net=host flask-python
