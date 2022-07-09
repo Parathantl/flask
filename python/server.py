@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
 from api.neo4j import init_driver
@@ -93,17 +93,26 @@ def home():
 def getQuery():
    form_data = request.get_json()
 
-   print("form_data:", form_data)
-
    query = form_data['query']
-
-   print("query:", query)
 
    prediction = pipe.run(query=query, params={"Retriever": {"top_k": 10}, "Reader": {"top_k": 5}})
    
-   print("prediction:", prediction)
+   answers_list = prediction['answers']
+   answers = []
+   probabilities = []
+   scores = []
+   document_name=[]
+   contexts=[]
    
-   return 0
+   for i in range(len(answers_list)):
+    answers.append(answers_list[i]['answer'])
+    probabilities.append(answers_list[i]['probability'])
+    scores.append(answers_list[i]['score'])
+    document_name.append(answers_list[i]['meta']['name'])
+    context_string=answers_list[i]['context'].replace("\n"," ")
+    contexts.append(context_string)
+    
+    return jsonify(list(zip(answers,probabilities,contexts,document_name)))
 
 if __name__=="__main__":
     app.run(host='0.0.0.0', port=80)
