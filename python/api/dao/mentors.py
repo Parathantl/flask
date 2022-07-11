@@ -193,15 +193,17 @@ class MentorDAO:
 
         def find_mentor_by_id(tx, user_id, mentorId):
             favorites = self.get_user_favorites(tx, user_id)
+            ratings = self.get_user_rated(tx, user_id, mentorId)
 
             cypher = """
             MATCH (m:Mentor {mentorId: $mentorId})
             RETURN m {
                 .*,
-                favorite: m.mentorId IN $favorites
+                favorite: m.mentorId IN $favorites,
+                rating: $ratings[0]
             } AS mentor
             """
-            result = tx.run(cypher, user_id=user_id, mentorId=mentorId, favorites=favorites).single()
+            result = tx.run(cypher, user_id=user_id, mentorId=mentorId, favorites=favorites, ratings=ratings).single()
 
             if result == None:
                 raise NotFoundException()
@@ -254,4 +256,17 @@ class MentorDAO:
         """, userId=user_id)
 
         return [ record.get("id") for record in result ]
+    # end::getUserFavorites[]
+
+    # tag::getUserRated[]
+    def get_user_rated(self, tx, user_id, mentorId):
+
+        if user_id == None:
+            return []
+        result = tx.run("""
+            MATCH (u:User {userId: $userId})-[r:RATED]->(m:Mentor {mentorId: $mentorId})
+            RETURN r.rating AS rating
+        """, userId=user_id, mentorId=mentorId)
+
+        return [ record.get("rating") for record in result ]
     # end::getUserFavorites[]

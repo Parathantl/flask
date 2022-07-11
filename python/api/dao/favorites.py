@@ -77,6 +77,60 @@ class FavoriteDAO:
         with self.driver.session() as session:
             return session.write_transaction(remove_from_favorites, user_id, courseId)
     # end::remove_course[]
+     
+    def add_mentor(self, userId, mentorId):
+        def add_course_to_favorites(tx, userId, mentorId):
+            
+            ratings = self.get_user_rated_mentor(tx, userId, mentorId)
+
+            row = tx.run("""
+                MATCH (u:User {userId: $userId})
+                MATCH (c:Mentor {mentorId: $mentorId})
+
+                MERGE (u)-[r:HAS_FAVORITE_MENTOR]->(c)
+                SET r.favorite = true
+
+                RETURN c {
+                    .*,
+                    favorite: true,
+                    rating: $ratings[0]
+                } AS course
+            """, userId=userId, mentorId=mentorId, ratings=ratings).single()
+
+            if row == None:
+                raise NotFoundException()
+
+            return row.get("course")
+
+        with self.driver.session() as session:
+            return session.write_transaction(add_course_to_favorites, userId, mentorId)
+        
+    # end::add_mentor[]
+
+    # tag::remove_mentor[]
+    def remove_mentor(self, user_id, mentorId):
+        def remove_from_favorites(tx, user_id, mentorId):
+            ratings = self.get_user_rated_mentor(tx, user_id, mentorId)
+
+            row = tx.run("""
+                MATCH (u:User {userId: $userId})-[r:HAS_FAVORITE_MENTOR]->(m:Mentor {mentorId: $mentorId})
+                DELETE r
+
+                RETURN m {
+                    .*,
+                    favorite: false,
+                    rating: $ratings[0]
+                } AS course
+            """, userId=user_id, mentorId=mentorId, ratings=ratings).single()
+
+            if row == None:
+                raise NotFoundException()
+
+            return row.get("course")
+
+        with self.driver.session() as session:
+            return session.write_transaction(remove_from_favorites, user_id, mentorId)
+    # end::remove_mentor[]
 
         # tag::getUserRated[]
     def get_user_rated(self, tx, user_id, course_id):
@@ -87,6 +141,19 @@ class FavoriteDAO:
             MATCH (u:User {userId: $userId})-[r:RATED]->(m:Course {courseId: $courseId})
             RETURN r.rating AS rating
         """, userId=user_id, courseId=course_id)
+
+        return [ record.get("rating") for record in result ]
+    # end::getUserFavorites[]
+
+
+    def get_user_rated_mentor(self, tx, user_id, mentorId):
+
+        if user_id == None:
+            return []
+        result = tx.run("""
+            MATCH (u:User {userId: $userId})-[r:RATED]->(m:Mentor {mentorId: $mentorId})
+            RETURN r.rating AS rating
+        """, userId=user_id, mentorId=mentorId)
 
         return [ record.get("rating") for record in result ]
     # end::getUserFavorites[]

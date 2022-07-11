@@ -45,6 +45,47 @@ def add_favorite_course(course_id):
 
     return jsonify(output)
 
+@account_routes.route('/favorites/mentor/<mentor_id>', methods=['POST', 'DELETE'])
+@jwt_required()
+def add_favorite_mentor(mentor_id):
+    user_id = current_identity["sub"]
+
+    dao = FavoriteDAO(current_app.driver)
+
+    if request.method == "POST":
+        # Save the favorite
+        output = dao.add_mentor(user_id, mentor_id)
+    else:
+        # Remove the favorite
+        output = dao.remove_mentor(user_id, mentor_id)
+
+    return jsonify(output)
+
+@account_routes.route('/ratings/mentor/<mentor_id>', methods=['POST', 'DELETE'])
+@jwt_required()
+def save_rating_mentor(mentor_id):
+    # Get user ID from JWT
+    user_id = current_identity["sub"]
+
+    # Create the DAO
+    dao = RatingDAO(current_app.driver)
+
+    if request.method == "POST":
+        # Save the favorite
+        # Get rating from Request
+        form_data = request.get_json()
+        rating = int(form_data["rating"])
+        output = dao.addMentorRating(user_id, mentor_id, rating)
+    else:
+        # Remove the favorite
+        output = dao.removeMentorRating(user_id, mentor_id)
+    # Save the rating
+
+    # Return the output
+    return jsonify(output)
+
+
+
 @account_routes.route('/ratings/course/<course_id>', methods=['POST', 'DELETE'])
 @jwt_required()
 def save_rating_course(course_id):

@@ -75,8 +75,6 @@ app.register_blueprint(mentor_routes)
 
 save_dir = "./saved_models"
 
-# document_store = FAISSDocumentStore.load(index_path="haystack_test_faiss", config_path="haystack_test_faiss_config")
-
 document_store = ElasticsearchDocumentStore(host="localhost", username="", password="", index="document")
 
 retriever = DensePassageRetriever.load(load_dir=save_dir, document_store=document_store)
@@ -114,5 +112,21 @@ def getQuery():
     
     return jsonify(list(zip(answers,probabilities,contexts,document_name)))
 
+@app.route('/api/queryans', methods=['POST'])
+def getQuery():
+   form_data = request.get_json()
+
+   query = form_data['query']
+
+   prediction = pipe.run(query=query, params={"Retriever": {"top_k": 10}, "Reader": {"top_k": 5}})
+   
+   answers_list = prediction['answers']
+   answers = []
+   
+   for i in range(len(answers_list)):
+    answers.append(answers_list[i]['answer'])
+    
+    return jsonify(list(zip(answers)))
+
 if __name__=="__main__":
-    app.run(host='0.0.0.0', port=80)
+    app.run(host='0.0.0.0', port=3001)
