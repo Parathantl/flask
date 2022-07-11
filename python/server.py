@@ -77,7 +77,7 @@ save_dir = "./saved_models"
 
 # document_store = ElasticsearchDocumentStore(host="localhost", username="", password="", index="document")
 
-document_store = FAISSDocumentStore(sql_url="sqlite://faiss_document_store.db", faiss_index_factory_str="Flat")
+document_store = FAISSDocumentStore(sql_url="sqlite:///faiss_document_store.db", faiss_index_factory_str="Flat")
 
 retriever = DensePassageRetriever.load(load_dir=save_dir, document_store=document_store)
 
