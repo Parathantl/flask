@@ -89,43 +89,34 @@ def home():
 
 @app.route('/api/query', methods=['POST'])
 def getQuery():
-   form_data = request.get_json()
-
-   query = form_data['query']
-
-   prediction = pipe.run(query=query, params={"Retriever": {"top_k": 10}, "Reader": {"top_k": 5}})
-   
-   answers_list = prediction['answers']
-   answers = []
-   probabilities = []
-   scores = []
-   document_name=[]
-   contexts=[]
-   
-   for i in range(len(answers_list)):
-    answers.append(answers_list[i]['answer'])
-    probabilities.append(answers_list[i]['probability'])
-    scores.append(answers_list[i]['score'])
-    document_name.append(answers_list[i]['meta']['name'])
-    context_string=answers_list[i]['context'].replace("\n"," ")
-    contexts.append(context_string)
     
-    return jsonify(list(zip(answers,probabilities,contexts,document_name)))
+    form_data = request.get_json()
+    query = form_data['query']
+    
+    prediction = pipe.run(query=query, params={"Retriever": {"top_k": 10}, "Reader": {"top_k": 5}})
+    
+    answers_list = prediction['answers']
+    answers = []
+    scores = []
+    
+    for answer in answers_list:
+        answers.append(answer.answer)
+        scores.append(answer.score)
+
+    return jsonify(list(zip(answers, scores)))
 
 @app.route('/api/queryans', methods=['POST'])
 def getQueryChatbot():
-   form_data = request.get_json()
-
-   query = form_data['query']
-
-   prediction = pipe.run(query=query, params={"Retriever": {"top_k": 10}, "Reader": {"top_k": 5}})
-   
-   answers_list = prediction['answers']
-   answers = []
-   
-   for i in range(len(answers_list)):
-    answers.append(answers_list[i]['answer'])
+    form_data = request.get_json()
+    query = form_data['query']
+    prediction = pipe.run(query=query, params={"Retriever": {"top_k": 10}, "Reader": {"top_k": 5}})
     
+    answers_list = prediction['answers']
+    answers = []
+    
+    for answer in answers_list:
+        answers.append(answer.answer)
+
     return jsonify(list(zip(answers)))
 
 if __name__=="__main__":
