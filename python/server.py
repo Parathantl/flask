@@ -75,13 +75,19 @@ app.register_blueprint(mentor_routes)
 
 save_dir = "./saved_models"
 
-document_store = ElasticsearchDocumentStore(host="localhost", username="", password="", index="document")
+# document_store = ElasticsearchDocumentStore(host="localhost", username="", password="", index="document")
+
+document_store = FAISSDocumentStore(sql_url="sqlite://faiss_document_store.db", faiss_index_factory_str="Flat")
 
 retriever = DensePassageRetriever.load(load_dir=save_dir, document_store=document_store)
 
-reader = FARMReader(model_name_or_path="deepset/roberta-base-squad2", use_gpu=True)
+# reader = FARMReader(model_name_or_path="deepset/roberta-base-squad2", use_gpu=True)
 
-pipe = ExtractiveQAPipeline(reader, retriever)
+generator = Seq2SeqGenerator(model_name_or_path="vblagoje/bart_lfqa")
+
+# pipe = ExtractiveQAPipeline(reader, retriever)
+
+pipe = GenerativeQAPipeline(generator, retriever)
 
 @app.route('/')
 def home():
@@ -93,7 +99,9 @@ def getQuery():
     form_data = request.get_json()
     query = form_data['query']
     
-    prediction = pipe.run(query=query, params={"Retriever": {"top_k": 10}, "Reader": {"top_k": 5}})
+    # prediction = pipe.run(query=query, params={"Retriever": {"top_k": 10}, "Reader": {"top_k": 5}})
+    
+    prediction = pipe.run(query=query, params={"Retriever": {"top_k": 4}})
     
     answers_list = prediction['answers']
     answers = []
@@ -109,8 +117,9 @@ def getQuery():
 def getQueryChatbot():
     form_data = request.get_json()
     query = form_data['query']
-    prediction = pipe.run(query=query, params={"Retriever": {"top_k": 10}, "Reader": {"top_k": 5}})
-    
+    # prediction = pipe.run(query=query, params={"Retriever": {"top_k": 10}, "Reader": {"top_k": 5}})
+    prediction = pipe.run(query=query, params={"Retriever": {"top_k": 4}})
+
     answers_list = prediction['answers']
     answers = []
     
