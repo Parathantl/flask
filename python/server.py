@@ -113,7 +113,7 @@ def getQuery():
     return jsonify(list(zip(answers,probabilities,contexts,document_name)))
 
 @app.route('/api/queryans', methods=['POST'])
-def getQuery():
+def getQueryChatbot():
    form_data = request.get_json()
 
    query = form_data['query']
