@@ -4,7 +4,7 @@ from haystack.document_stores import ElasticsearchDocumentStore
 from haystack.utils import convert_files_to_docs, fetch_archive_from_http, clean_wiki_text, print_answers
 from haystack.nodes import DensePassageRetriever
 
-document_store = FAISSDocumentStore(sql_url="sqlite:///faiss_document_store.db", faiss_index_factory_str="Flat")
+document_store = FAISSDocumentStore(faiss_index_factory_str="Flat")
 
 # document_store = ElasticsearchDocumentStore(host="localhost", username="", password="", index="document")
 
