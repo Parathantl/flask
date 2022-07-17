@@ -80,11 +80,8 @@ def get_mentor_ratings(mentor_id):
 def get_similar_mentors(mentor_id):
     user_id = current_identity["sub"] if current_identity != None else None
 
-    limit = request.args.get("limit", 6, type=int)
-    skip = request.args.get("skip", 0, type=int)
-
     dao = MentorDAO(current_app.driver)
 
-    output = dao.get_similar_mentors(mentor_id, limit, skip, user_id)
+    output = dao.get_similar_mentors(mentor_id, user_id)
 
     return jsonify(output)

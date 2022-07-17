@@ -132,7 +132,7 @@ class AuthDAO:
             payload,
             self.jwt_secret,
             algorithm='HS256'
-        ).decode('ascii')
+        )
     # end::generate[]
 
     # tag::decode[]

@@ -110,84 +110,6 @@ class MentorDAO:
             })
     # end::createNew[]
 
-    # tag::getByGenre[]
-    def get_by_genre(self, name, sort='title', order='ASC', limit=6, skip=0, user_id=None):
-        # Get Movies in a Genre
-        def get_movies_in_genre(tx, sort, order, limit, skip, user_id):
-            favorites = self.get_user_favorites(tx, user_id)
-
-            cypher = """
-                MATCH (m:Movie)-[:IN_GENRE]->(:Genre {{name: $name}})
-                WHERE exists(m.`{0}`)
-                RETURN m {{
-                    .*,
-                    favorite: m.tmdbId in $favorites
-                }} AS movie
-                ORDER BY m.`{0}` {1}
-                SKIP $skip
-                LIMIT $limit
-            """.format(sort, order)
-
-            result = tx.run(cypher, name=name, limit=limit, skip=skip, user_id=user_id, favorites=favorites)
-
-            return [ row.get("movie") for row in result ]
-
-        with self.driver.session() as session:
-            return session.read_transaction(get_movies_in_genre, sort, order, limit=limit, skip=skip, user_id=user_id)
-    # end::getByGenre[]
-
-    # tag::getForActor[]
-    def get_for_actor(self, id, sort='title', order='ASC', limit=6, skip=0, user_id=None):
-        # Get Movies for an Actor
-        def get_movies_for_actor(tx, id, sort, order, limit, skip, user_id):
-            favorites = self.get_user_favorites(tx, user_id)
-
-            cypher = """
-                MATCH (:Person {{tmdbId: $id}})-[:ACTED_IN]->(m:Movie)
-                WHERE exists(m.`{0}`)
-                RETURN m {{
-                    .*,
-                    favorite: m.tmdbId in $favorites
-                }} AS movie
-                ORDER BY m.`{0}` {1}
-                SKIP $skip
-                LIMIT $limit
-            """.format(sort, order)
-
-            result = tx.run(cypher, id=id, limit=limit, skip=skip, user_id=user_id, favorites=favorites)
-
-            return [ row.get("movie") for row in result ]
-
-        with self.driver.session() as session:
-            return session.read_transaction(get_movies_for_actor, id, sort, order, limit=limit, skip=skip, user_id=user_id)
-    # end::getForActor[]
-
-    # tag::getForDirector[]
-    def get_for_director(self, id, sort='title', order='ASC', limit=6, skip=0, user_id=None):
-        # Get Movies directed by a Person
-        def get_movies_for_director(tx, id, sort, order, limit, skip, user_id):
-            favorites = self.get_user_favorites(tx, user_id)
-
-            cypher = """
-                MATCH (:Person {{tmdbId: $id}})-[:DIRECTED]->(m:Movie)
-                WHERE exists(m.`{0}`)
-                RETURN m {{
-                    .*,
-                    favorite: m.tmdbId in $favorites
-                }} AS movie
-                ORDER BY m.`{0}` {1}
-                SKIP $skip
-                LIMIT $limit
-            """.format(sort, order)
-
-            result = tx.run(cypher, id=id, limit=limit, skip=skip, user_id=user_id, favorites=favorites)
-
-            return [ row.get("movie") for row in result ]
-
-        with self.driver.session() as session:
-            return session.read_transaction(get_movies_for_director, id, sort, order, limit=limit, skip=skip, user_id=user_id)
-    # end::getForDirector[]
-
     # tag::findById[]
     def find_by_id(self, user_id, mentorId):
 
@@ -215,34 +137,26 @@ class MentorDAO:
     # end::findById[]
 
     # tag::getSimilarMentors[]
-    def get_similar_mentors(self, id, limit=6, skip=0, user_id=None):
+    def get_similar_mentors(self, id, user_id=None):
         # Get similar mentors
-        def find_similar_mentors(tx, id, limit, skip, user_id):
+        def find_similar_mentors(tx, id, user_id):
             favorites = self.get_user_favorites(tx, user_id)
             
             cypher = """
-            MATCH (:Mentor {mentorId: $id})-[:BELONGS_TO|HAS_FAVORITE_MENTOR]->()<-[:BELONGS_TO|HAS_FAVORITE_MENTOR]-(m)
-
-            WITH m, count(*) AS inCommon
-            WITH m, inCommon, m.imdbRating * inCommon AS score
-            ORDER BY score DESC
-
-            SKIP $skip
-            LIMIT $limit
+            MATCH (:Mentor {mentorId: $id})-[:INTERESTED_IN|HAS_WORKED_AT]->()<-[:INTERESTED_IN|HAS_WORKED_AT]-(m)
 
             RETURN m {
                 .*,
-                score: score,
                 favorite: m.mentorId IN $favorites
             } AS mentor
             """
 
-            result = tx.run(cypher, id=id, limit=limit, skip=skip, favorites=favorites)
+            result = tx.run(cypher, id=id, favorites=favorites)
 
             return [ row.get("mentor") for row in result ]
 
         with self.driver.session() as session:
-            return session.read_transaction(find_similar_mentors, id, limit, skip, user_id)
+            return session.read_transaction(find_similar_mentors, id, user_id)
     # end::getSimilarMovies[]
 
     # tag::getUserFavorites[]
