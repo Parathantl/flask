@@ -2,8 +2,8 @@ from haystack.nodes import DensePassageRetriever
 from haystack.document_stores import InMemoryDocumentStore
 
 doc_dir = "/home/ubuntu/flask/python/content"
-train_filename = "answersDPR.json"
-dev_filename = "answersDPR.json"
+train_filename = "trainDPR.json"
+dev_filename = "testDPR.json"
 
 query_model = "facebook/dpr-question_encoder-single-nq-base"
 passage_model = "facebook/dpr-ctx_encoder-single-nq-base"
