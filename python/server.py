@@ -17,10 +17,10 @@ from api.routes.courses import course_routes
 from api.routes.mentors import mentor_routes
 from api.routes.companies import company_routes
 
-# from haystack.nodes import DensePassageRetriever
-# from haystack.pipelines import GenerativeQAPipeline, ExtractiveQAPipeline
-# from haystack.nodes import FARMReader, TransformersReader, Seq2SeqGenerator
-# from haystack.document_stores import ElasticsearchDocumentStore, FAISSDocumentStore
+from haystack.nodes import DensePassageRetriever
+from haystack.pipelines import GenerativeQAPipeline, ExtractiveQAPipeline
+from haystack.nodes import FARMReader, TransformersReader, Seq2SeqGenerator
+from haystack.document_stores import ElasticsearchDocumentStore, FAISSDocumentStore
 
 app = Flask(__name__)
 CORS(app)
@@ -73,60 +73,58 @@ app.register_blueprint(course_routes)
 app.register_blueprint(company_routes)
 app.register_blueprint(mentor_routes)
 
-# save_dir = "./saved_models"
+save_dir = "./saved_models"
 
 # document_store = ElasticsearchDocumentStore(host="localhost", username="", password="", index="document")
 
-# document_store = FAISSDocumentStore.load(index_path="haystack_test_faiss", config_path="haystack_test_faiss_config")
+document_store = FAISSDocumentStore.load(index_path="haystack_test_faiss", config_path="haystack_test_faiss_config")
 
-# retriever = DensePassageRetriever.load(load_dir=save_dir, document_store=document_store)
+retriever = DensePassageRetriever.load(load_dir=save_dir, document_store=document_store)
 
-# reader = FARMReader(model_name_or_path="deepset/roberta-base-squad2", use_gpu=True)
+reader = FARMReader(model_name_or_path="deepset/roberta-base-squad2", use_gpu=True)
 
-# generator = Seq2SeqGenerator(model_name_or_path="vblagoje/bart_lfqa")
+generator = Seq2SeqGenerator(model_name_or_path="vblagoje/bart_lfqa")
 
-# pipe = ExtractiveQAPipeline(reader, retriever)
-
-# pipe = GenerativeQAPipeline(generator, retriever)
+pipe = GenerativeQAPipeline(generator, retriever)
 
 @app.route('/')
 def home():
     return {"hello": "world"}
 
-# @app.route('/api/query', methods=['POST'])
-# def getQuery():
+@app.route('/api/query', methods=['POST'])
+def getQuery():
     
-#     form_data = request.get_json()
-#     query = form_data['query']
+    form_data = request.get_json()
+    query = form_data['query']
     
-#     # prediction = pipe.run(query=query, params={"Retriever": {"top_k": 10}, "Reader": {"top_k": 5}})
+    # prediction = pipe.run(query=query, params={"Retriever": {"top_k": 10}, "Reader": {"top_k": 5}})
     
-#     prediction = pipe.run(query=query, params={"Retriever": {"top_k": 4}})
+    prediction = pipe.run(query=query, params={"Retriever": {"top_k": 4}})
     
-#     answers_list = prediction['answers']
-#     answers = []
-#     scores = []
+    answers_list = prediction['answers']
+    answers = []
+    scores = []
     
-#     for answer in answers_list:
-#         answers.append(answer.answer)
-#         scores.append(answer.score)
+    for answer in answers_list:
+        answers.append(answer.answer)
+        scores.append(answer.score)
 
-#     return jsonify(list(zip(answers, scores)))
+    return jsonify(list(zip(answers, scores)))
 
-# @app.route('/api/queryans', methods=['POST'])
-# def getQueryChatbot():
-#     form_data = request.get_json()
-#     query = form_data['query']
-#     # prediction = pipe.run(query=query, params={"Retriever": {"top_k": 10}, "Reader": {"top_k": 5}})
-#     prediction = pipe.run(query=query, params={"Retriever": {"top_k": 4}})
+@app.route('/api/queryans', methods=['POST'])
+def getQueryChatbot():
+    form_data = request.get_json()
+    query = form_data['query']
+    # prediction = pipe.run(query=query, params={"Retriever": {"top_k": 10}, "Reader": {"top_k": 5}})
+    prediction = pipe.run(query=query, params={"Retriever": {"top_k": 4}})
 
-#     answers_list = prediction['answers']
-#     answers = []
+    answers_list = prediction['answers']
+    answers = []
     
-#     for answer in answers_list:
-#         answers.append(answer.answer)
+    for answer in answers_list:
+        answers.append(answer.answer)
 
-#     return jsonify(list(zip(answers)))
+    return jsonify(list(zip(answers)))
 
 if __name__=="__main__":
     app.run(host='0.0.0.0', port=3000)
