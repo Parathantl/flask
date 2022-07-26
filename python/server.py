@@ -75,8 +75,6 @@ app.register_blueprint(mentor_routes)
 
 save_dir = "./saved_models"
 
-# document_store = ElasticsearchDocumentStore(host="localhost", username="", password="", index="document")
-
 document_store = FAISSDocumentStore.load(index_path="haystack_test_faiss", config_path="haystack_test_faiss_config")
 
 retriever = DensePassageRetriever.load(load_dir=save_dir, document_store=document_store)
@@ -96,9 +94,7 @@ def getQuery():
     
     form_data = request.get_json()
     query = form_data['query']
-    
-    # prediction = pipe.run(query=query, params={"Retriever": {"top_k": 10}, "Reader": {"top_k": 5}})
-    
+        
     prediction = pipe.run(query=query, params={"Retriever": {"top_k": 4}})
     
     answers_list = prediction['answers']
@@ -115,7 +111,7 @@ def getQuery():
 def getQueryChatbot():
     form_data = request.get_json()
     query = form_data['query']
-    # prediction = pipe.run(query=query, params={"Retriever": {"top_k": 10}, "Reader": {"top_k": 5}})
+
     prediction = pipe.run(query=query, params={"Retriever": {"top_k": 4}})
 
     answers_list = prediction['answers']
