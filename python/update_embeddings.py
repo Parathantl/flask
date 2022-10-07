@@ -10,7 +10,11 @@ document_store = FAISSDocumentStore(faiss_index_factory_str="Flat")
 
 # Let's first get some files that we want to use
 docu_dir = "./api/routes/data/tutorial12"
+<<<<<<< Updated upstream
 s3_url = "https://bitbucket.org/parathant/rp-project/raw/05d756e32cc6cf34ee2ef567e41033e3fcc06deb/dataset.zip"
+=======
+s3_url = "https://bitbucket.org/parathant/rp-project/raw/418799f4b245da2c95f676b7f768109afd50f97a/dataset.zip"
+>>>>>>> Stashed changes
 fetch_archive_from_http(url=s3_url, output_dir=docu_dir)
 
 # Convert files to dicts
